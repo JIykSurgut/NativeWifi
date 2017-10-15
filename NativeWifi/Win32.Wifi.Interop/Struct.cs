@@ -120,20 +120,20 @@ namespace Win32.Wifi.Interop
     [StructLayout(LayoutKind.Sequential)]
     public struct WlanInterfaceInfoList
     {
-        public Int32 dwNumberOfItems;
-        public Int32 dwIndex;
+        public UInt32 dwNumberOfItems;
+        public UInt32 dwIndex;
         public WlanInterfaceInfo[] InterfaceInfo;
-        public WlanInterfaceInfoList(IntPtr pList)
-        {
-            dwNumberOfItems = Marshal.ReadInt32(pList, 0);
-            dwIndex = Marshal.ReadInt32(pList, 4);
-            InterfaceInfo = new WlanInterfaceInfo[dwNumberOfItems];
-            for (int i = 0; i <= dwNumberOfItems - 1; i++)
-            {
-                IntPtr pItemList = new IntPtr(pList.ToInt64() + (i * 532) + 8);
-                InterfaceInfo[i] = (WlanInterfaceInfo)Marshal.PtrToStructure(pItemList, typeof(WlanInterfaceInfo));
-            }
-        }
+        //public WlanInterfaceInfoList(IntPtr pList)
+        //{
+        //    dwNumberOfItems = Marshal.ReadInt32(pList, 0);
+        //    dwIndex = Marshal.ReadInt32(pList, 4);
+        //    InterfaceInfo = new WlanInterfaceInfo[dwNumberOfItems];
+        //    for (int i = 0; i <= dwNumberOfItems - 1; i++)
+        //    {
+        //        IntPtr pItemList = new IntPtr(pList.ToInt64() + (i * 532) + 8);
+        //        InterfaceInfo[i] = (WlanInterfaceInfo)Marshal.PtrToStructure(pItemList, typeof(WlanInterfaceInfo));
+        //    }
+        //}
     }
 
     //для WlanInterfaceInfoList
@@ -148,5 +148,32 @@ namespace Win32.Wifi.Interop
         public WlanInterfaceState isState;
     }
 
-    
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    public struct WLAN_CONNECTION_ATTRIBUTES
+    {
+        public WLAN_INTERFACE_STATE isState;
+
+        public WLAN_CONNECTION_MODE wlanConnectionMode;
+
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 256)]
+        public string strProfileName;
+
+        public WLAN_ASSOCIATION_ATTRIBUTES wlanAssociationAttributes;
+
+        public WLAN_SECURITY_ATTRIBUTES wlanSecurityAttributes;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct WLAN_ASSOCIATION_ATTRIBUTES
+    {
+        public DOT11_SSID dot11Ssid;
+        public DOT11_BSS_TYPE dot11BssType;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 6)]
+        public String dot11Bssid;
+        public DOT11_PHY_TYPE dot11PhyType;
+        public UInt32 uDot11PhyIndex;
+        public UInt32 wlanSignalQuality; //WLAN_SIGNAL_QUALITY
+        public UInt32 ulRxRate;
+        public UInt32 ulTxRate;
+    }
 }

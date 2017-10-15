@@ -43,12 +43,11 @@ namespace Win32.Wifi.Interop
 
         #region 06 WlanEnumInterfaces
         //перечисляет все интерфейсы беспроводной локальной сети, которые в настоящее время включены на локальном компьютере
-        //https://msdn.microsoft.com/ru-ru/library/windows/desktop/ms706716(v=vs.85).aspx
         [DllImport("Wlanapi", EntryPoint = "WlanEnumInterfaces")]
-        public static extern uint WlanEnumInterfaces(
+        public static extern UInt32 WlanEnumInterfaces(
             [In] IntPtr hClientHandle, 
-            IntPtr pReserved, 
-            ref IntPtr ppInterfaceList);
+            [In] [Out] IntPtr pReserved, 
+            [Out] out WlanInterfaceInfoList ppInterfaceList);
         #endregion
 
         #region 07 WlanExtractPsdIEDataList	NO INFO
@@ -200,26 +199,39 @@ namespace Win32.Wifi.Interop
 
         #region 29 WlanOpenHandle
         [DllImport("Wlanapi.dll")]
-        public static extern int WlanOpenHandle(
-            uint dwClientVersion,
-            IntPtr pReserved, //not in MSDN but required
-            [Out] out uint pdwNegotiatedVersion,
-            out IntPtr ClientHandle);
+        public static extern UInt32 WlanOpenHandle(
+            [In] UInt32 dwClientVersion,
+            [In] [Out] IntPtr pReserved,
+            [Out] out UInt32 pdwNegotiatedVersion,
+            [Out] out IntPtr phClientHandle
+            );
         #endregion
 
         #region 30 WlanQueryAutoConfigParameter NO INFO
         #endregion
 
         #region 31 WlanQueryInterface
+        /// <summary>
+        /// Функция запрашивает различные параметры указанного интерфейса
+        /// </summary>
+        /// <param name="hClientHandle">Handle сеанса клиента</param>
+        /// <param name="pInterfaceGuid">GUID интерфейса для запроса</param>
+        /// <param name="OpCode">Значение задающее параметр, подлежащий запросу</param>
+        /// <param name="pReserved"></param>
+        /// <param name="pdwDataSize">Размер параметра ppData в байтах</param>
+        /// <param name="ppData">Указатель на ячейку памяти, содержащую запрошенное значение параметра, заданного параметром OpCode</param>
+        /// <param name="pWlanOpcodeValueType">Значение WLAN_OPCODE_VALUE_TYPE, которое указывает тип возвращаемого кода операции</param>
+        /// <returns></returns>
         [DllImport("Wlanapi", EntryPoint = "WlanQueryInterface")]
-        public static extern uint WlanQueryInterface(
+        public static extern UInt32 WlanQueryInterface(
             [In] IntPtr hClientHandle,
             [In] ref Guid pInterfaceGuid,
-            WLAN_INTF_OPCODE OpCode,
-            IntPtr pReserved,
-            [Out] out uint pdwDataSize,
-            ref IntPtr ppData,
-            IntPtr pWlanOpcodeValueType);
+            [In] WLAN_INTF_OPCODE OpCode,
+            [In] [Out] IntPtr pReserved,
+            [Out] out UInt32 pdwDataSize,
+            [Out] out IntPtr ppData,
+            [Out] out WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType
+            );
         #endregion
 
         #region 32 WlanReasonCodeToString

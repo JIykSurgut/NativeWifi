@@ -7,13 +7,12 @@ namespace Win32.Wifi
 {
     public class WlanClient
     {
-        int errorCode = 0;  //код ошибки
-        public IntPtr handle;
-        private uint negotiatedVersion;
-
+        UInt32 errorCode = 0;  //код ошибки
+        public IntPtr phClientHandle;
+        
         WlanClient()
         {
-            errorCode = WlanInterop.WlanOpenHandle(2, IntPtr.Zero, out negotiatedVersion, out handle);
+            errorCode = WlanInterop.WlanOpenHandle(2u, IntPtr.Zero, out UInt32 pdwNegotiatedVersion, out phClientHandle);
         }
 
         ~WlanClient()
@@ -27,13 +26,19 @@ namespace Win32.Wifi
             }
         }
 
-        public WlanInterface[] Interface
+        public WlanInterfaceInfoList Interface
         {
             get
             {
-                IntPtr intPtr;
-                WlanInterop.WlanEnumInterfaces(handle, IntPtr.Zero, ref intPtr);
+                WlanInterop.WlanEnumInterfaces(
+                    phClientHandle, 
+                    IntPtr.Zero, 
+                    out WlanInterfaceInfoList wlanInterfaceList);
+                return wlanInterfaceList;
             }
         }
+
+        
+            
     }
 }

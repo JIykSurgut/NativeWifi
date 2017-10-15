@@ -63,64 +63,43 @@ namespace Win32.Wifi.Interop
 
     }
 
+
+    public enum WLAN_OPCODE_VALUE_TYPE
+    {
+        wlan_opcode_value_type_query_only = 0,
+        wlan_opcode_value_type_set_by_group_policy = 1,
+        wlan_opcode_value_type_set_by_user = 2,
+        wlan_opcode_value_type_invalid = 3
+    }
+
     public enum WLAN_INTF_OPCODE
     {
-
-        /// wlan_intf_opcode_autoconf_start -> 0x000000000
-        wlan_intf_opcode_autoconf_start = 0,
-
-        wlan_intf_opcode_autoconf_enabled,
-
+        //wlan_intf_opcode_autoconf_start = 0x000000000,
+        wlan_intf_opcode_autoconf_enabled = 0x1,
         wlan_intf_opcode_background_scan_enabled,
-
         wlan_intf_opcode_media_streaming_mode,
-
         wlan_intf_opcode_radio_state,
-
         wlan_intf_opcode_bss_type,
-
         wlan_intf_opcode_interface_state,
-
         wlan_intf_opcode_current_connection,
-
         wlan_intf_opcode_channel_number,
-
         wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs,
-
         wlan_intf_opcode_supported_adhoc_auth_cipher_pairs,
-
         wlan_intf_opcode_supported_country_or_region_string_list,
-
         wlan_intf_opcode_current_operation_mode,
-
         wlan_intf_opcode_supported_safe_mode,
-
         wlan_intf_opcode_certified_safe_mode,
-
-        /// wlan_intf_opcode_autoconf_end -> 0x0fffffff
-        wlan_intf_opcode_autoconf_end = 268435455,
-
-        /// wlan_intf_opcode_msm_start -> 0x10000100
-        wlan_intf_opcode_msm_start = 268435712,
-
+        wlan_intf_opcode_hosted_network_capable,
+        wlan_intf_opcode_management_frame_protection_capable,
+        //wlan_intf_opcode_autoconf_end = 0x0fffffff,
+        //wlan_intf_opcode_msm_start = 0x10000100,
         wlan_intf_opcode_statistics,
-
         wlan_intf_opcode_rssi,
-
-        /// wlan_intf_opcode_msm_end -> 0x1fffffff
-        wlan_intf_opcode_msm_end = 536870911,
-
-        /// wlan_intf_opcode_security_start -> 0x20010000
-        wlan_intf_opcode_security_start = 536936448,
-
-        /// wlan_intf_opcode_security_end -> 0x2fffffff
-        wlan_intf_opcode_security_end = 805306367,
-
-        /// wlan_intf_opcode_ihv_start -> 0x30000000
-        wlan_intf_opcode_ihv_start = 805306368,
-
-        /// wlan_intf_opcode_ihv_end -> 0x3fffffff
-        wlan_intf_opcode_ihv_end = 1073741823,
+        //wlan_intf_opcode_msm_end = 0x1fffffff,
+        //wlan_intf_opcode_security_start = 0x20010000,
+        //wlan_intf_opcode_security_end = 0x2fffffff,
+        //wlan_intf_opcode_ihv_start = 0x30000000,
+        //wlan_intf_opcode_ihv_end = 0x3fffffff
     }
 
     //реализовать
@@ -147,7 +126,7 @@ namespace Win32.Wifi.Interop
         AdapterOperationModeChange
     }
 
-    public enum WlanNotificationCodeAcm
+    public enum WlanNotificationCodeAcm: UInt32
     {
         AutoconfEnabled = 1,
         AutoconfDisabled,
@@ -173,19 +152,31 @@ namespace Win32.Wifi.Interop
         AdhocNetworkStateChange
     }
 
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public enum WlanInterfaceState
+    public enum WLAN_INTERFACE_STATE: UInt32
     {
-        NotReady,
-        Connected,
-        AdHocNetworkFormed,
-        Disconnecting,
-        Disconnected,
-        Associating,
-        Discovering,
-        Authenticating
+        wlan_interface_state_not_ready = 0,
+        wlan_interface_state_connected = 1,
+        wlan_interface_state_ad_hoc_network_formed = 2,
+        wlan_interface_state_disconnecting = 3,
+        wlan_interface_state_disconnected = 4,
+        wlan_interface_state_associating = 5,
+        wlan_interface_state_discovering = 6,
+        wlan_interface_state_authenticating = 7,
+    }
+
+    public enum DOT11_PHY_TYPE: UInt32
+    {
+        dot11_phy_type_unknown = 0,
+        dot11_phy_type_any = 0,
+        dot11_phy_type_fhss = 1,
+        dot11_phy_type_dsss = 2,
+        dot11_phy_type_irbaseband = 3,
+        dot11_phy_type_ofdm = 4,
+        dot11_phy_type_hrdsss = 5,
+        dot11_phy_type_erp = 6,
+        dot11_phy_type_ht = 7,
+        dot11_phy_type_vht = 8,
+        dot11_phy_type_IHV_start = 0x80000000,
+        dot11_phy_type_IHV_end = 0xffffffff
     }
 }

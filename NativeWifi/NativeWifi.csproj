@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Help\Class1.cs" />
     <Compile Include="Win32.Wifi.Interop\ProfileFactory.cs" />
+    <Compile Include="WlanInterface.cs" />
     <Compile Include="Win32.Wifi.Interop\WlanInterop.cs" />
     <Compile Include="WlanClient.cs" />
     <Compile Include="Win32.Wifi.Interop\Enum.cs" />

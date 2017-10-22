@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Win32.Wifi.Interop
 {
-    public delegate void WlanNotificationCallbackDelegate(ref WlanNotificationData notificationData, IntPtr context);
+    //public delegate void WlanNotificationCallbackDelegate(ref WlanNotificationData notificationData, IntPtr context);
 
     [Flags]
     public enum WlanNotificationSource

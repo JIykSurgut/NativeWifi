@@ -1,178 +1,261 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
 using Win32.Wifi.Interop;
 
 namespace NativeWifi.Win32.Wifi.Interop
 {
-    class WlanInterface
+    public struct InfoParam<TKey>
     {
-        //private object WlanQueryInterfaceHelper(WLAN_INTF_OPCODE opCode)
-        //{
-        //    WlanInterop.WlanQueryInterface(
-        //            hClientHandle,
-        //            ref interfaceInfo.interfaceGuid,
-        //            opCode,
-        //            IntPtr.Zero,
-        //            out UInt32 pdwDataSize,
-        //            out IntPtr ppData,
-        //            out WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType);
+        public TKey value;
+        public OpcodeValueType type;
+    }
+    public class WlanInterface
+    { 
+        public Guid guid;
+        public Guid Guid { get { return guid;} }
+        public string Description { get; private set; }
+        private IntPtr handle;
 
-        //    switch (opCode)
-        //    {
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_autoconf_enabled:                   
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_background_scan_enabled:
-        //            {
-        //                return Marshal.ReadInt32(ppData);
-        //            }
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_media_streaming_mode: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_radio_state: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_bss_type:
-        //            {
-        //                return Marshal.ReadInt32(ppData); 
-        //            }
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_interface_state: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_current_connection: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_channel_number: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_supported_infrastructure_auth_cipher_pairs: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_supported_adhoc_auth_cipher_pairs: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_supported_country_or_region_string_list: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_current_operation_mode: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_supported_safe_mode: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_certified_safe_mode: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_hosted_network_capable: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_management_frame_protection_capable: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_statistics: break;
-        //        case WLAN_INTF_OPCODE.wlan_intf_opcode_rssi: break;
-
-        //    }
-
-        //    return null;
-        //}
-
-        public Boolean Autoconf {
+        public WlanInterface(IntPtr handle, Guid guid, string description)
+        {
+            this.handle = handle;
+            this.guid = guid;
+            Description = description;
+        }
+       
+        public InfoParam<Boolean> Autoconf
+        {
             get
             {
                 WlanInterop.WlanQueryInterface(
-                    hClientHandle,
-                    ref interfaceInfo.interfaceGuid,
-                    WLAN_INTF_OPCODE.wlan_intf_opcode_autoconf_enabled,
+                    handle,
+                    ref guid,
+                    IntfOpcode.autoconf_enabled,
                     IntPtr.Zero,
                     out UInt32 pdwDataSize,
                     out IntPtr ppData,
-                    out WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType);
+                    out OpcodeValueType pWlanOpcodeValueType);
 
-                return Marshal.ReadInt32(ppData) != 0;
+                return new InfoParam<Boolean>() { value = Marshal.ReadInt32(ppData)!=0, type = pWlanOpcodeValueType };              
             }
             set
             {
 
             }
         }
-        //public bool BackgroundScan { get; set; }
-        //public bool RadioState { get; set; }
-        public DOT11_BSS_TYPE BssType
+        public InfoParam<Boolean> BackgroundScan
         {
             get
             {
                 WlanInterop.WlanQueryInterface(
-                    hClientHandle,
-                    ref interfaceInfo.interfaceGuid,
-                    WLAN_INTF_OPCODE.wlan_intf_opcode_bss_type,
+                    handle,
+                    ref guid,
+                    IntfOpcode.background_scan_enabled,
                     IntPtr.Zero,
                     out UInt32 pdwDataSize,
                     out IntPtr ppData,
-                    out WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType);
+                    out OpcodeValueType pWlanOpcodeValueType);
 
-                return (DOT11_BSS_TYPE)Marshal.ReadInt32(ppData);
+                return new InfoParam<Boolean>() { value = Marshal.ReadInt32(ppData) != 0, type = pWlanOpcodeValueType };
+            }
+            
+        }
+        ////public bool RadioState { get; set; }
+        public InfoParam<Dot11BSSType> BssType
+        {
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                    handle,
+                    ref guid,
+                    IntfOpcode.bss_type,                    
+                    IntPtr.Zero,
+                    out UInt32 pdwDataSize,
+                    out IntPtr ppData,
+                    out OpcodeValueType pWlanOpcodeValueType);
+
+                return new InfoParam<Dot11BSSType>() { value = (Dot11BSSType)Marshal.ReadInt32(ppData), type = pWlanOpcodeValueType };
             }
             set { }
         }
-        //public bool InterfaceState { get; set; }
-        public WLAN_CONNECTION_ATTRIBUTES CurrentConnection
+        public InfoParam<InterfaceState> InterfaceState
         {
             get
             {
                 WlanInterop.WlanQueryInterface(
-                    hClientHandle,
-                    ref interfaceInfo.interfaceGuid,
-                    WLAN_INTF_OPCODE.wlan_intf_opcode_current_connection,
+                    handle,
+                    ref guid,
+                    IntfOpcode.interface_state,
                     IntPtr.Zero,
                     out UInt32 pdwDataSize,
                     out IntPtr ppData,
-                    out WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType);
+                    out OpcodeValueType pWlanOpcodeValueType);
 
-                return (WLAN_CONNECTION_ATTRIBUTES)Marshal.PtrToStructure(ppData, typeof(WLAN_CONNECTION_ATTRIBUTES));
+                return new InfoParam<InterfaceState>() { value = (InterfaceState)Marshal.ReadInt32(ppData), type = pWlanOpcodeValueType };
+            }
+
+        }
+        public InfoParam<WLAN_CONNECTION_ATTRIBUTES> CurrentConnection
+        {
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                    handle,
+                    ref guid,
+                    IntfOpcode.current_connection,
+                    IntPtr.Zero,
+                    out UInt32 pdwDataSize,
+                    out IntPtr ppData,                   
+                    out OpcodeValueType pWlanOpcodeValueType);
+
+                return new InfoParam<WLAN_CONNECTION_ATTRIBUTES>()
+                {
+                    value = (WLAN_CONNECTION_ATTRIBUTES)Marshal.PtrToStructure(ppData, typeof(WLAN_CONNECTION_ATTRIBUTES)),
+                    type = pWlanOpcodeValueType
+                };
             }
             set { }
         }
-        public UInt32 ChannelNumber
+        public InfoParam<UInt32> ChannelNumber
         {
             get
             {
                 WlanInterop.WlanQueryInterface(
-                    hClientHandle,
-                    ref interfaceInfo.interfaceGuid,
-                    WLAN_INTF_OPCODE.wlan_intf_opcode_bss_type,
+                    handle,
+                    ref guid,
+                    IntfOpcode.channel_number,
                     IntPtr.Zero,
                     out UInt32 pdwDataSize,
                     out IntPtr ppData,
-                    out WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType);
+                    out OpcodeValueType pWlanOpcodeValueType);
 
-                return (UInt32)Marshal.ReadInt32(ppData);
+                return new InfoParam<UInt32>() { value = (UInt32)Marshal.ReadInt32(ppData), type = pWlanOpcodeValueType };
             }
             set { }
         }
         //public bool SupportedInfrastructureAuthCipherPairs { get; set; }
         //public bool SupportedAdhocAuthCipherPairs { get; set; }
         //public bool SupportedCountryOrRegionStringList { get; set; }
-        //public bool MediaStreamingMode { get; set; }
+        public InfoParam<Boolean> MediaStreamingMode
+        {
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                    handle,
+                    ref guid,
+                    IntfOpcode.media_streaming_mode,
+                    IntPtr.Zero,
+                    out UInt32 pdwDataSize,
+                    out IntPtr ppData,
+                    out OpcodeValueType pWlanOpcodeValueType);
+
+                return new InfoParam<Boolean>() { value = Marshal.ReadInt32(ppData) != 0, type = pWlanOpcodeValueType };
+            }
+            
+        }
         //public bool Statistics { get; set; }
-        //public bool Rssi { get; set; }
-        //public bool CurrentOperationMode { get; set; }
-        //public bool SupportedSafeMode { get; set; }
-        //public bool CertifiedSafeMode { get; set; }
-
-        private WlanInterfaceInfo interfaceInfo;
-        private IntPtr hClientHandle; 
-
-        WlanInterface(WlanInterfaceInfo interfaceInfo, IntPtr hClientHandle)
+        public InfoParam<Int32> Rssi
         {
-            this.interfaceInfo = interfaceInfo;
-            this.hClientHandle = hClientHandle;
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                    handle,
+                    ref guid,
+                    IntfOpcode.rssi,
+                    IntPtr.Zero,
+                    out UInt32 pdwDataSize,
+                    out IntPtr ppData,
+                    out OpcodeValueType pWlanOpcodeValueType);
+
+                return new InfoParam<Int32>() { value = Marshal.ReadInt32(ppData), type = pWlanOpcodeValueType };
+            }
+           
+        }
+        public InfoParam<UInt32> CurrentOperationMode
+        {
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                    handle,
+                    ref guid,
+                    IntfOpcode.current_operation_mode,
+                    IntPtr.Zero,
+                    out UInt32 pdwDataSize,
+                    out IntPtr ppData,
+                    out OpcodeValueType pWlanOpcodeValueType);
+
+                return new InfoParam<UInt32>() { value = (UInt32)Marshal.ReadInt32(ppData), type = pWlanOpcodeValueType };
+            }
+
+        }
+        public InfoParam<Boolean> SupportedSafeMode
+        {
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                   handle,
+                   ref guid,
+                   IntfOpcode.supported_safe_mode,
+                   IntPtr.Zero,
+                   out UInt32 pdwDataSize,
+                   out IntPtr ppData,
+                   out OpcodeValueType pWlanOpcodeValueType);
+                return new InfoParam<Boolean>() { value = Marshal.ReadInt32(ppData) != 0, type = pWlanOpcodeValueType };
+            }
+            
+        }
+        public InfoParam<Boolean> CertifiedSafeMode
+        {
+            get
+            {
+                WlanInterop.WlanQueryInterface(
+                   handle,
+                   ref guid,
+                   IntfOpcode.certified_safe_mode,
+                   IntPtr.Zero,
+                   out UInt32 pdwDataSize,
+                   out IntPtr ppData,
+                   out OpcodeValueType pWlanOpcodeValueType);
+                return new InfoParam<Boolean>() { value = Marshal.ReadInt32(ppData) != 0, type = pWlanOpcodeValueType };
+            }
+            
         }
 
-        public void Scan()
+        public void GetNetwork()
         {
-            //запрашивает сканирование доступных сетей на указанном интерфейсе
-            //Функция WlanScan запрашивает, чтобы собственный драйвер беспроводной локальной сети 802.11 просматривал доступные беспроводные сети.
-            WlanInterop.WlanScan(
-                handle, 
-                ref interfaceInfo.interfaceGuid, 
-                IntPtr.Zero, 
-                IntPtr.Zero, 
-                IntPtr.Zero
-                );
+            WlanInterop.WlanGetAvailableNetworkList(handle, ref guid, 1, IntPtr.Zero, out IntPtr ppAvailableNetworkList);
+
+            UInt32 dwNumberOfItems = (UInt32)Marshal.ReadInt32(ppAvailableNetworkList, 0);
+            UInt32 dwIndex = (UInt32)Marshal.ReadInt32(ppAvailableNetworkList, sizeof(UInt32));
+            ppAvailableNetworkList += 2 * sizeof(UInt32);
+
+
+            AvailableNetwork[] wlanInterface = new AvailableNetwork[dwNumberOfItems];
+
+            Int32 sizeOfStruct = Marshal.SizeOf(typeof(AvailableNetwork));
+            for (int i = 0; i < dwNumberOfItems; i++)
+            {
+                wlanInterface[i] = (AvailableNetwork)Marshal.PtrToStructure(ppAvailableNetworkList + sizeOfStruct * i, typeof(AvailableNetwork));
+
+            }
+
+
         }
 
-        public void GetInterfaceInfo(WLAN_INTF_OPCODE opCode)
-        {
-            UInt32 pdwDataSize;
-            IntPtr ppData;
-            WLAN_OPCODE_VALUE_TYPE pWlanOpcodeValueType;
+        //public void Scan()
+        //{
+        //    //запрашивает сканирование доступных сетей на указанном интерфейсе
+        //    //Функция WlanScan запрашивает, чтобы собственный драйвер беспроводной локальной сети 802.11 просматривал доступные беспроводные сети.
+        //    WlanInterop.WlanScan(
+        //        handle,
+        //        ref guid,
+        //        IntPtr.Zero,
+        //        IntPtr.Zero,
+        //        IntPtr.Zero
+        //        );
+        //}
 
-            WlanInterop.WlanQueryInterface(
-                hClientHandle,
-                ref interfaceInfo.interfaceGuid,  
-                opCode, 
-                IntPtr.Zero, 
-                out pdwDataSize,
-                out ppData,
-                out pWlanOpcodeValueType); 
-        }
+
 
     }
 }

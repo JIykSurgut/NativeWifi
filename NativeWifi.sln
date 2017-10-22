@@ -5,7 +5,7 @@ VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NativeWifi", "NativeWifi\NativeWifi.csproj", "{78AA26BE-13F2-4675-857F-12521F3D97F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "ConsoleApp\ConsoleApp.csproj", "{F035D78B-4955-42B3-9859-DB55A8734645}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsNativeWifi", "WindowsFormsNativeWifi\WindowsFormsNativeWifi.csproj", "{67D2A534-8FEC-401D-9855-846D1525BC72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{78AA26BE-13F2-4675-857F-12521F3D97F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78AA26BE-13F2-4675-857F-12521F3D97F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{78AA26BE-13F2-4675-857F-12521F3D97F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F035D78B-4955-42B3-9859-DB55A8734645}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F035D78B-4955-42B3-9859-DB55A8734645}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F035D78B-4955-42B3-9859-DB55A8734645}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F035D78B-4955-42B3-9859-DB55A8734645}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67D2A534-8FEC-401D-9855-846D1525BC72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67D2A534-8FEC-401D-9855-846D1525BC72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67D2A534-8FEC-401D-9855-846D1525BC72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67D2A534-8FEC-401D-9855-846D1525BC72}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
